@@ -1,0 +1,20 @@
+<schema adapter="checkissuance">
+	<element tablename="checkissuance">
+		<field name="objid" primary="true" prefix="CI" />
+		<field name="state" required="true" indexed="true" defaultValue="DRAFT" caption="State" />
+		<field name="checkbook_objid" required="true" />
+		<field name="checkno" required="true" searchable="true" caption="Check No." />
+		<field name="checkdate" required="true" caption="Check Date"/>
+		<field name="payee_objid" required="true" />
+		<field name="payee_name" required="true" searchable="true" caption="Payee" />
+		<field name="payee_address" required="true" Caption="Address"/>
+		<field name="particulars" required="true" caption="Particulars" />
+		<field name="amount" required="true" type="decimal" caption="Amount" />
+
+		<complex name="checkbook" ref="checkbook"
+			jointype="many-to-one"
+			includefields="bankaccount.code,bankaccount.title">
+				<key field="checkbook_objid" target="objid" />
+		</complex>
+	</element>
+</schema>

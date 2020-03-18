@@ -1,0 +1,20 @@
+import com.rameses.common.*
+import com.rameses.annotations.*
+import com.rameses.services.extended.*
+
+class SaranganiPaymentOrderService {
+	@DataContext('lgu_po')
+	def em;
+
+	@DataContext('itemaccount')
+	def em_itemaccount
+
+	@ProxyMethod
+	public def open(po) {
+	po = em.read(po)
+	po.items.each{poitem ->
+		poitem.item = em_itemaccount.find([objid: poitem.item.objid]).first()
+	}
+	return po
+	}
+}

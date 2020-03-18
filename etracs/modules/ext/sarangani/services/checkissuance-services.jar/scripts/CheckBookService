@@ -1,0 +1,34 @@
+import com.rameses.common.*
+import com.rameses.annotations.*
+import com.rameses.services.extended.*
+
+class CheckBookService{
+	@Env
+	def env
+
+	@DataContext('checkbook')
+	def em
+	
+	@ProxyMethod
+	public void validateOverlapSeries(checkbook){
+		def o = em.find([
+			startseries:checkbook.startseries,
+			bankaccount_objid:checkbook.bankaccount.objid,
+			]).first() 
+
+		if (o && o.objid!=checkbook.objid){
+			throw new Exception('start series found with Stub No: ' + o.stubno)
+		}
+
+	}
+		@ProxyMethod
+		public def assign(checkbook){
+			def assignedto = checkbook.assignedto
+			assignedto.name=assignedto.lastname + ', ' + assignedto.firstname
+			assignedto.title = assignedto.jobtitle
+			em.update(checkbook)
+			return checkbook
+			
+		}
+
+}

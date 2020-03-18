@@ -1,0 +1,28 @@
+import com.rameses.common.*
+import com.rameses.annotations.*
+
+class CheckBookInterceptors{
+	@Service('CheckBookService')
+	def checkbookSvc
+
+	@Before(pattern="PersistenceService.(create|update)" ,eval="#{args[0]._schemaname=='checkbook' && args[0]._action == null}")
+	public void beforeSave(ei){
+		def checkbook = ei.args[0]
+		def qty = 50;
+
+		checkbookSvc.validateOverlapSeries(checkbook)
+		def rem = (checkbook.startseries - 1) % qty;
+		if (rem !=0){
+			throw new Exception ('Start series is invalid. Must end with 1 and divisible by 50.')
+		}
+		checkbook.endseries = checkbook.startseries + qty -1
+
+		if (checkbook.currentseries < checkbook.startseries || checkbook.currentseries>checkbook.endseries){
+			throw new Exception('Current series must be between start series and end series')
+		}
+	}
+	@After(pattern="PersistenceService.(create|update)" ,eval="#{args[0]._schemaname=='checkbook'}")
+	public void afterSave(ei){
+println 'Intercept after saving checkbook'
+	}
+}
