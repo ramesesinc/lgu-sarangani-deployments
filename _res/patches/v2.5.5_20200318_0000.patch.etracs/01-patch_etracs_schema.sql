@@ -109,8 +109,3 @@ CREATE TABLE `paymentorder` (
    KEY `ix_org_objid` (`org_objid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8
 ; 
-
-
-CREATE UNIQUE INDEX `uix_ruleset_name` ON sys_rule (`ruleset`,`name`)
-;
-
