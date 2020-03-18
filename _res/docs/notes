@@ -1,0 +1,22 @@
+[Docker App]
+IP  : 192.168.2.114
+User: 
+Pass: 
+
+[Portainer]
+URL  : http://localhost:9000
+User : admin
+Pass : p@ssw0rd
+
+
+[GitHub]
+git clone https://github.com/ramesesinc/lgu-sarangani-deployments.git
+
+[DockerHub]
+sudo docker pull nginx:latest
+sudo docker pull ramesesinc/notification-server:1.0
+sudo docker pull ramesesinc/mail-server:latest
+sudo docker pull ramesesinc/queue-server:255.02.002
+sudo docker pull ramesesinc/gdx-proxy-server:v001
+sudo docker pull ramesesinc/gdx-client:1.01.003
+sudo docker pull ramesesinc/etracs25-server-province:255.02.007
