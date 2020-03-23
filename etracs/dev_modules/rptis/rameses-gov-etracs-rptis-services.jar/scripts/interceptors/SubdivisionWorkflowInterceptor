@@ -119,7 +119,7 @@ class SubdivisionWorkflowInterceptor
 		subdivisionSvc.checkCompletedAssistance([objid: subdivision.objid, taskstate: 'taxmapper'])
 
 		//check landpin count, at least 2
-		def lands = em.getSubdividedLands([subdivisionid:subdivision.objid])
+		def lands = subdivisionSvc.getSubdividedLands(subdivision.objid)
 		if (lands.size() <= 1)
 			throw new Exception('Subdivision requires at least two (2) Subdivided Lands.')
 

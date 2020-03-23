@@ -37,10 +37,10 @@ public class MachRYSettingLookupService
         params.searchtext = (params.searchtext ? params.searchtext : '') + '%'
         def filters = []
         if (params.ry) {
-            filters << 'rs.ry = $P{ry}'
+            filters << '(rs.ry is null OR rs.ry = $P{ry})'
         }
         if (params.lguid) {
-            filters << 'l.lguid = $P{lguid}'
+            filters << '(l.lguid is null OR l.lguid = $P{lguid})'
         }
 
         params.filters = ''

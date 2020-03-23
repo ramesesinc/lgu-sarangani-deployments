@@ -84,22 +84,28 @@ class RPTLedgerInterceptor
                 svc.postLedgerFaasData(faas)
             }
         } else {
-            if (util.isTrue(faas.datacapture)) {
+            if (util.isTrue(faas.datacapture) && hasCurrentPreviousFaas(faas)) {
+                svc.postLedgerFaasData(faas)
+            } else if (util.isTrue(faas.datacapture)) {
                 postNewLedger(faas)
             }
             else if ((faas.txntype.objid.matches('SD|CS') || isFAASFromSubdivision(faas)) && faas.rpu.rputype == 'land'){
                 svc.postNewLedger(faas)
             }
             else if ((faas.txntype.objid.matches('SD|CS') || isFAASFromSubdivision(faas)) && faas.rpu.rputype != 'land'){
-                svc.postLedgerFaasData(faas);
+                svc.postLedgerFaasData(faas)
             }
             else if ( faas.txntype.newledger ) {
                 postNewLedger(faas)
             }
             else {
-                svc.postLedgerFaasData(faas);
+                svc.postLedgerFaasData(faas)
             }   
         }
+    }
+
+    def hasCurrentPreviousFaas(faas) {
+        return faas.previousfaases.find{it.prevfaasid != null} != null
     }
 
     def isLedgerExisting(faas){

@@ -33,3 +33,4 @@ services:
       - "8571:8571"
     volumes:
       - ../_res/connections:/apps/gdx/connections/ext
+      - ./lib/rameses-gdx-coordinator.jar:/apps/server/lib/rameses-gdx-coordinator.jar

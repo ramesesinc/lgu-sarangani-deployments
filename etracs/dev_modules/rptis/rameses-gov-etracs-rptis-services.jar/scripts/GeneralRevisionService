@@ -54,6 +54,7 @@ class GeneralRevisionService
 	public def initOnlineGeneralRevision( info ) {
 		def faas = initGeneralRevision(info)
 		faasSvc.createFaas(faas)
+		insertSketch(faas)
 		return faas 
 	}
 

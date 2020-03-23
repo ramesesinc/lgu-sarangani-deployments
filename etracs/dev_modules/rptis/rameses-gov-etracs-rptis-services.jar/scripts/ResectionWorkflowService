@@ -107,6 +107,7 @@ class ResectionWorkflowService extends ActiveWorkflowService
 
 	public void afterCloseTask(task) {
 		if (!task.state.matches('assign.*')){
+			env.data._taskid = task.objid
         	svc.insertFaasSignatories(env.data)
 		}
 		svc.updateSignatories(task)

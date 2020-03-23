@@ -78,13 +78,14 @@ entity.app.context=etracs25
 	<module file="treasury/rameses-gov-treasury-tool.jar" version="2.50"/>
 
 	<!-- rptis -->
-	<module file="rptis/rameses-gov-etracs-rptis-landtax.jar" version="2.50"/>
-	<module file="rptis/rameses-gov-etracs-rptis-landtax-report.jar" version="2.50"/>
-	<module file="rptis/rameses-gov-etracs-rptis.jar" version="2.50"/>
-	<module file="rptis/rameses-gov-etracs-rptis-report.jar" version="2.50"/>
+	<module file="rptis/rameses-gov-etracs-rptis-landtax.jar" version="2.51"/>
+	<module file="rptis/rameses-gov-etracs-rptis-landtax-report.jar" version="2.51"/>
+	<module file="rptis/rameses-gov-etracs-rptis.jar" version="2.51"/>
+	<module file="rptis/rameses-gov-etracs-rptis-report.jar" version="2.51"/>
 	<module file="rptis/rameses-gov-etracs-rptis-transmittal.jar" version="2.50"/>
-	<module file="rptis/rameses-gov-etracs-rptis-province.jar" version="2.50"/>
-	<module file="rptis/rameses-gov-etracs-rptis-landtax-province.jar" version="2.50"/>
+	<module file="rptis/rameses-gov-etracs-rptis-province.jar" version="2.51"/>
+	<module file="rptis/rameses-gov-etracs-rptis-landtax-province.jar" version="2.51"/>
+	<module file="rptis/rameses-gov-etracs-rptis-sync.jar" version="1.00"/>
 
 	<!-- queue -->
 	<module file="queue/rameses-queueing.jar" version="2.50"/>

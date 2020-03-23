@@ -308,6 +308,7 @@ class RPTReceiptService
 	@ProxyMethod
 	public void formatReceiptForPrinting(receipt){
 		receipt._items = em.getItemsForPrinting(receipt)
+		receipt.owners = receipt._items.owner?.name.unique().join(";")
 		util.buildPeriodCovered(receipt._items)
 		receipt.itemcount = receipt._items.size()
 		if(receipt.itemcount > 0) {

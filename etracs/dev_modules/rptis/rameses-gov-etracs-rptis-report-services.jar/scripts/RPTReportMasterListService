@@ -86,7 +86,7 @@ class RPTReportMasterListService
         if ('GR'.equalsIgnoreCase(params.reporttype)){
             titles << 'General Revision Master List of'
         } else if ('MAINTENANCE'.equalsIgnoreCase(params.reporttype)){
-            params.title = 'Maintenance Master List of' 
+            titles << 'Maintenance Master List of' 
         } else {
 			titles << 'Master List of' 
 		}
@@ -138,11 +138,13 @@ class RPTReportMasterListService
             filters << ' f.txntype_objid = $P{txntypeid} '
         }
         else if ('MAINTENANCE'.equalsIgnoreCase(params.reporttype)){
-            filters = ' f.txntype_objid <> $P{txntypeid} '  
-            title = 'Maintenance Master List of Real Property' 
+            filters << ' f.txntype_objid <> $P{txntypeid} '  
         }
 
-		params.filters = ' AND ' + filters.join(' AND ')
+        params.filters = ''
+        if (filters) {
+			params.filters = ' AND ' + filters.join(' AND ')
+        }
 
 		params.orderbyclause = ''
 		if( params.orderby ) { 

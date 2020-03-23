@@ -67,9 +67,31 @@ where refid in (
 
 
 [getSubdividedLands]
-SELECT sl.*
+SELECT sl.*,
+	rp.objid AS rp_objid,
+	rp.ry AS rp_ry,
+	rp.state AS rp_state,
+	rp.claimno AS rp_claimno,
+	rp.cadastrallotno AS rp_cadastrallotno,
+	rp.surveyno AS rp_surveyno,
+	rp.north AS rp_north,
+	rp.east AS rp_east,
+	rp.west AS rp_west,
+	rp.south AS rp_south,
+	b.name AS rp_barangay_name,
+	r.objid AS rpu_objid,
+	r.rputype AS rpu_rputype,
+	r.fullpin AS rpu_fullpin,
+	r.totalareasqm AS rpu_totalareasqm,
+	r.totalareaha AS rpu_totalareaha,
+	r.totalav AS rpu_totalav,
+	r.totalmv AS rpu_totalmv 
 FROM subdividedland sl
+	INNER JOIN realproperty rp ON sl.newrpid = rp.objid 
+	INNER JOIN barangay b ON rp.barangayid = b.objid 
+	LEFT JOIN rpu r ON sl.newrpuid = r.objid  
 WHERE sl.subdivisionid = $P{subdivisionid}
+${filter}
 ORDER BY sl.newpin 
 	
 
@@ -292,6 +314,7 @@ SELECT cl.*,
 	r.totalav,
 	r.totalareaha,
 	r.totalareasqm,
+	r.taxable,
 	rp.barangayid,
 	rp.lgutype,
 	f.effectivityyear
@@ -613,3 +636,10 @@ and rp.parcel >= i.startparcel
 and rp.parcel <= i.endparcel
 and exists(select * from landdetail where landrpuid = f.rpuid) 
 
+
+[getSubdividedLandSections]
+select distinct rp.section
+from subdividedland sl 
+inner join realproperty rp on sl.newrpid = rp.objid
+where sl.subdivisionid = $P{objid}
+order by rp.section

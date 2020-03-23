@@ -1,0 +1,19 @@
+V255-03019
+------------------------------------------------
+ASSESSOR:
+	- Modified synchronization between prov and muni (management)
+	- Subdivision: support filter by section in subdivided lands
+	- FAAS: bldg: add bldgfloorarea info
+	- FAAS: previous: add prevtaxability info
+	- Subdivision: cancel improvement: support modification and access to cancellation reports
+	- Machinery: report: deconstruct machine smv params as fields
+	- TD: report: add prevtaxability info
+	- Report: Property Examination/Audit: add lgu and baranga filter
+	- Report: masterlist: fix title error
+	- Rule: landassessment: add specificclassification to support mix-use assessment 
+	- Report: faas: machinery: support additional page
+	- FAAS: signatory: add support to modify prov appraiser and taxmapper
+
+LANDTAX:
+	- RPTLedger: sync: support prov and muni sync
+	- RPTLedger: subledger: validate total area, mv and av

@@ -37,6 +37,7 @@ class ProvinceSyncMachSettingInterceptor
 					}
 			
 			setting.forexes = machSvc.getForexes(setting)
+			setting.smvs = machSvc.getMachineSmvs(setting)
 		}
 	}
 

@@ -85,6 +85,7 @@ SELECT cl.*,
 	r.totalav AS rpu_totalav,
 	r.totalareaha AS rpu_totalareaha,
 	r.totalareasqm AS rpu_totalareasqm,
+	r.taxable AS rpu_taxable,
 	rp.barangayid,
 	rp.lguid,
 	rp.lgutype

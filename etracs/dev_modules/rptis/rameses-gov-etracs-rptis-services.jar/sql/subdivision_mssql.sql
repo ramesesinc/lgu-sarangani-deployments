@@ -89,6 +89,7 @@ FROM subdividedland sl
 	INNER JOIN barangay b ON rp.barangayid = b.objid 
 	LEFT JOIN rpu r ON sl.newrpuid = r.objid  
 WHERE sl.subdivisionid = $P{subdivisionid}
+${filter}
 ORDER BY sl.newpin 
 	
 
@@ -311,6 +312,7 @@ SELECT cl.*,
 	r.totalav,
 	r.totalareaha,
 	r.totalareasqm,
+	r.taxable,
 	rp.barangayid,
 	rp.lguid,
 	rp.lgutype,
@@ -635,3 +637,9 @@ and rp.parcel <= i.endparcel
 and exists(select * from landdetail where landrpuid = f.rpuid) 
 
 
+[getSubdividedLandSections]
+select distinct rp.section
+from subdividedland sl 
+inner join realproperty rp on sl.newrpid = rp.objid
+where sl.subdivisionid = $P{objid}
+order by rp.section

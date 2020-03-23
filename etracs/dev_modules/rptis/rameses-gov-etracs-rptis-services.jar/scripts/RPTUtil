@@ -557,7 +557,7 @@ class RPTUtil
 
     @ProxyMethod
     public void buildEmptyRows( data, listlimitsize) {
-        for(int i=data.size + 1; i<listlimitsize; i++) {
+        for(int i=data.size + 1; i<=listlimitsize; i++) {
             data.add( [taxable:true] )
         }
     }   
@@ -829,6 +829,21 @@ class RPTUtil
             return newval 
         }
         return val 
+    }
+
+    @ProxyMethod
+    public def partition(array, size) {
+        def partitions = []
+        int partitionCount = array.size() / size
+
+        partitionCount.times { partitionNumber ->
+            def start = partitionNumber * size 
+            def end = start + size - 1
+            partitions << array[start..end]    
+        }
+
+        if (array.size() % size) partitions << array[partitionCount * size..-1]
+        return partitions    
     }
     
 

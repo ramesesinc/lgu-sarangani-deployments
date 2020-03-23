@@ -102,6 +102,7 @@ class SubdivisionWorkflowService extends ActiveWorkflowService
 
 	public void afterCloseTask(task) {
 		if (!task.state.matches('assign.*')){
+			env.data._taskid = task.objid
         	subdivisionSvc.insertFaasSignatories(env.data)
 		}
 		subdivisionSvc.updateSignatories(task)

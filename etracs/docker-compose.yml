@@ -45,3 +45,4 @@ services:
 
       - ./dev_modules/rptis:/rptis
       - ./dev_modules/rptis/etracs_rptis.conf:/apps/etracs25/modules.conf.d/etracs_rptis.conf
+      - ./lib/rameses-osiris3-core2.jar:/apps/server/lib/rameses-osiris3-core2.jar

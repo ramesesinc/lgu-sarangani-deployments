@@ -56,6 +56,9 @@ class SubdivisionService
     @Service('FAASAnnotationService')
     def annotationSvc 
 
+    @Service('CancelledFAASService')
+    def cancelFaasSvc
+
 
     @DataContext('subdivision')
     def em_subdivision
@@ -66,11 +69,17 @@ class SubdivisionService
     @DataContext('subdivision_affectedrpu')
     def em_affectedrpu
 
+    @DataContext('subdivision_task')
+    def em_task
+
     @DataContext('faas_task')
     def em_faas_task
 
+    @DataContext('faas_signatory')
+    def em_faas_signatory
+
     @DataContext('subdivision_cancelledimprovement')
-    def cancelledimprovementDb
+    def em_cancelledimprovement
 
     @DataContext('subdivision_assist')
     def em_assist
@@ -81,6 +90,11 @@ class SubdivisionService
     @DataContext('realproperty')
     def em_realproperty
 
+    @DataContext('cancelledfaas')
+    def em_cancelledfaas
+
+    @DataContext('cancelledfaas_signatory')
+    def em_cancelledfaas_signatory
 
     @DataContext(value='dbimage_header', adapter='image')
     def em_header
@@ -167,7 +181,11 @@ class SubdivisionService
             deleteSubdividedLand(sl)
         }
 
-        cancelledimprovementDb.find([parentid:subdivision.objid]).delete()
+        em_cancelledimprovement.find([parentid:subdivision.objid]).list().each {
+            cancelFaasSvc.delete(it)
+        }
+
+        em_cancelledimprovement.find([parentid:subdivision.objid]).delete()
         
         txnRef.delete(subdivision.objid)
         em.deleteTasks(subdivision)
@@ -238,14 +256,36 @@ class SubdivisionService
 
     @ProxyMethod
     public def getSubdividedLands( subdivisionid ) {
-        return em.getSubdividedLands([subdivisionid:subdivisionid])
+        return getLands([objid: subdivisionid])
+    }
+
+    @ProxyMethod
+    public def getLands(params ) {
+        params.subdivisionid = params.objid
+        params.filter = ''
+        if (params.section) {
+            params.filter = ' AND rp.section = $P{section}'
+        }
+        return em.getSubdividedLands(params)
     }
 
     @ProxyMethod
     public void createCancelledImprovement(cancelledimprovement) {
         deleteAffectedRpuFaas(cancelledimprovement.arpu)
         em.delete(cancelledimprovement.arpu, 'affectedrpu')
-        cancelledimprovementDb.create(cancelledimprovement)
+        em_cancelledimprovement.create(cancelledimprovement)
+        cancelledimprovement.state = 'PENDING'
+        cancelledimprovement.originlguid = env.ORGID 
+        cancelledimprovement.faas = [objid: cancelledimprovement.faasid]
+        cancelledimprovement._options = [checkreference: false]
+        cancelledimprovement.online = false
+        cancelFaasSvc.create(cancelledimprovement)
+    }
+
+    @ProxyMethod
+    public void updateCancelledImprovement(cancelledimprovement) {
+        em_cancelledimprovement.update(cancelledimprovement)
+        cancelFaasSvc.update(cancelledimprovement)
     }
 
     @ProxyMethod
@@ -253,7 +293,8 @@ class SubdivisionService
         def arpu = em.findAffectedRpuById(cancelledimprovement)
         def subdivision = open([objid:cancelledimprovement.parentid])
         createAffectedRpu(subdivision, arpu)
-        cancelledimprovementDb.delete([objid:cancelledimprovement.objid])
+        em_cancelledimprovement.delete([objid:cancelledimprovement.objid])
+        cancelFaasSvc.delete(cancelledimprovement)
     }
 
 
@@ -457,16 +498,25 @@ class SubdivisionService
 
     @ProxyMethod
     public void insertFaasSignatories(subdivision) {
+        def _taskid = subdivision._taskid
+        def currTask = em_task.find([objid: _taskid]).first()
+        if (!currTask) return 
+
         em_subdividedland.find([subdivisionid: subdivision.objid]).list().each{
-            em_faas_task.find([refid: it.newfaasid]).delete()
+            faasSvc.insertOnlineFaasSignatory([
+                taskid: _taskid, 
+                faasid: it.newfaasid, 
+                task: currTask
+            ])
         }
 
         em_affectedrpu.find([subdivisionid: subdivision.objid]).list().each{
-            em_faas_task.find([refid: it.newfaasid]).delete()
+            faasSvc.insertOnlineFaasSignatory([
+                taskid: _taskid, 
+                faasid: it.newfaasid, 
+                task: currTask
+            ])
         }
-
-        em.insertSubdividedLandFaasSignatories(subdivision)
-        em.insertAffectedRpuSignatories(subdivision)
     }
 
     @ProxyMethod
@@ -666,6 +716,7 @@ class SubdivisionService
         pf.totalareasqm =  faas.rpu.totalareasqm
         pf.totalareaha =  faas.rpu.totalareaha
         pf.effectivityyear =  faas.effectivityyear
+        pf.taxable =  faas.rpu.taxable
 
         faas.objid = 'F' + arpu.objid 
         faas.state = STATE_PENDING
@@ -820,6 +871,8 @@ class SubdivisionService
         if (cancelledimprovement.reason?.code) {
             cancelreason = cancelledimprovement.reason.code
         }
+        cancelledimprovement.faas = faas
+
         def params = [
             objid               : faas.objid,
             rpuid               : faas.rpuid, 
@@ -829,6 +882,16 @@ class SubdivisionService
             cancelledbytdnos    : cancelledbytdnos,
         ]
         faasSvc.cancelFaas(params)
+        approveCancelledImprovementFaas(cancelledimprovement)
+    }
+
+    void approveCancelledImprovementFaas(cancelledimprovement) {
+        em_cancelledfaas.find([objid: cancelledimprovement.objid]).update([state: 'APPROVED'])
+        def signatory = em_faas_signatory.find([objid: cancelledimprovement.faas.objid]).first()
+        if (signatory) {
+            em_cancelledfaas_signatory.save(signatory)
+        }
+        cancelFaasSvc.postLedgerCancellation(cancelledimprovement)
     }
 
 
@@ -976,6 +1039,11 @@ class SubdivisionService
             println 'assistItem => ' + assistItem
             throw new Exception('Parcels assigned to ' + assistItem.parent.assignee.fullname + ' are not completed.')
         }
+    }
+
+    @ProxyMethod
+    public def getSubdividedLandSections(subdivision) {
+        return em.getSubdividedLandSections(subdivision)
     }
 }
 
