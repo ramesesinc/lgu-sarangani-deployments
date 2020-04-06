@@ -1,21 +1,21 @@
 <app>
 <env>
 app.title=ETRACS 2.5 build 05 20200318 (PROVINCE OF SARANGANI)
-app.host=192.168.2.1:8070
+app.host=192.168.2.23:8070
 app.cluster=osiris3
 app.context=etracs25
-app.help=http://192.168.2.1:8080/help
+app.help=http://192.168.2.23:8080/help
 app.loader=com.rameses.osiris2.client.OsirisAppLoader
 readTimeout=300000
 connectionTimeout=5000
 filemgmt.enabled=false
 
-ws.host=192.168.2.1:8060
-#res.host=192.168.2.1
+ws.host=192.168.2.23:8060
+#res.host=192.168.2.23
 
-socketio.host=192.168.2.1:7080
+socketio.host=192.168.2.23:7080
 
-entity.app.host=192.168.2.1:8070
+entity.app.host=192.168.2.23:8070
 entity.app.context=etracs25
 </env>
 <modules> 
