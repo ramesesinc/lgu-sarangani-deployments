@@ -1,10 +1,16 @@
 [Docker App]
-IP  : 192.168.2.114
+IP  : 
 User: 
 Pass: 
 
+
+[DB Patches]
+From v2.5.5_20200515_001.patch.etracs
+To   v255_20210211.patch.etracs.rptis
+
+
 [Portainer]
-URL  : http://localhost:9000
+URL  : http://SERVER_IP:9000
 User : admin
 Pass : p@ssw0rd
 
@@ -12,11 +18,15 @@ Pass : p@ssw0rd
 [GitHub]
 git clone https://github.com/ramesesinc/lgu-sarangani-deployments.git
 
+
 [DockerHub]
-sudo docker pull nginx:latest
-sudo docker pull ramesesinc/notification-server:1.0
-sudo docker pull ramesesinc/mail-server:latest
-sudo docker pull ramesesinc/queue-server:255.02.002
-sudo docker pull ramesesinc/gdx-proxy-server:v001
-sudo docker pull ramesesinc/gdx-client:1.01.003
-sudo docker pull ramesesinc/etracs25-server-province:255.02.007
+docker pull nginx:latest
+docker pull ramesesinc/notification-server:1.0
+docker pull ramesesinc/node-download-server:0.0.3
+docker pull ramesesinc/etracs-web:2.5.01.01
+docker pull ramesesinc/gdx-proxy-server:v002
+docker pull ramesesinc/gdx-client:1.03.01
+docker pull ramesesinc/queue-server:255.02.002
+docker pull ramesesinc/mail-server:latest
+docker pull ramesesinc/local-epayment-server:2.5.01.02.04
+docker pull ramesesinc/etracs-server-province:2.5.03.01.01
