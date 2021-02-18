@@ -6,6 +6,19 @@ alter table af_control add constraint fk_af_control_afid
 	foreign key (afid) references af (objid) 
 go 
 
+update aa set 
+	aa.allocid = null 
+from af_control aa, 
+	( 
+		select c.objid 
+		from af_control c 
+			left join af_allocation l on l.objid = c.allocid 
+		where c.allocid is not null 
+			and l.objid is null 
+	)bb 
+where aa.objid = bb.objid 
+go  
+
 alter table af_control add constraint fk_af_control_allocid 
 	foreign key (allocid) references af_allocation (objid) 
 go 

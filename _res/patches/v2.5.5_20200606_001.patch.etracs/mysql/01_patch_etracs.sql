@@ -6,6 +6,19 @@ alter table aftxn add lockid varchar(50) null
 --    foreign key (afid) references af (objid) 
 -- ; 
 
+update 
+	af_control aa, 
+	( 
+		select c.objid 
+		from af_control c 
+			left join af_allocation l on l.objid = c.allocid 
+		where c.allocid is not null 
+			and l.objid is null 
+	)bb 
+set aa.allocid = null 
+where aa.objid = bb.objid 
+; 
+
 alter table af_control add constraint fk_af_control_allocid 
 	foreign key (allocid) references af_allocation (objid) 
 ; 

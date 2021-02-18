@@ -6,7 +6,7 @@ Pass:
 
 [DB Patches]
 From v2.5.5_20200515_001.patch.etracs
-To   v255_20210211.patch.etracs.rptis
+To   v255_20210131.patch
 
 
 [Portainer]
