@@ -1,7 +1,13 @@
 [Docker App]
-IP  : 
-User: 
-Pass: 
+IP  : 192.168.2.23
+User: administrator
+Pass: p@ssw0rd
+
+
+[MySQL Server]
+dbserver_host=192.168.2.25
+dbserver_user=root
+dbserver_pass=2477
 
 
 [DB Patches]
